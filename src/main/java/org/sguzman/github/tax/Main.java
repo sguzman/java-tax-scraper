@@ -1,25 +1,36 @@
 package org.sguzman.github.tax;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 
 public class Main {
   public final static String[] barNumbers = {"24041980", "00792098"};
-  private final static String postURLLogin = "https://www.hcdistrictclerk.com/eDocs/Secure/WideLogin.aspx?ReturnUrl=%2fCommon%2fDefault.aspx%3fShowFF%3d1";
-
-
-  private static String soupedUp() throws IOException {
-    final String url = "https://www.hcdistrictclerk.com/Common/Default.aspx?ShowFF=1";
-    Document doc = Jsoup.connect(url).get();
-    Element viewState = doc.getElementById("__VIEWSTATE");
-
-    return viewState.attr("value");
-  }
 
   public static void main(String[] args) throws IOException {
-    System.out.println(soupedUp());
+    ChromeOptions chromeOptions = new ChromeOptions();
+    chromeOptions.setBinary("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome");
+    chromeOptions.addArguments("--headless");
+
+    WebDriver Driver = new ChromeDriver(chromeOptions);
+    Driver.navigate().to("https://the-internet.herokuapp.com/login");
+
+    WebDriverWait waitForUsername = new WebDriverWait(Driver, 5000);
+    waitForUsername.until(ExpectedConditions.visibilityOfElementLocated(By.id("username")));
+
+    Driver.findElement(By.id("username")).sendKeys("tomsmith");
+    Driver.findElement(By.id("password")).sendKeys("SuperSecretPassword!");
+
+    Driver.findElement(By.cssSelector("button.radius")).click();
+    System.out.println(Driver.getPageSource());
+
+    WebDriverWait waitForError = new WebDriverWait(Driver, 5000);
+    waitForError.until(ExpectedConditions.visibilityOfElementLocated(By.id("flash")));
+    Driver.quit();
   }
 }
