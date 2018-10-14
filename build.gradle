@@ -1,0 +1,16 @@
+plugins {
+    id 'java'
+}
+
+group 'com.github.sguzman'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.apache.httpcomponents:httpcomponents-client:4.5.6'
+}
