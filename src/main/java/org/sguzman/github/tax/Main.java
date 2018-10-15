@@ -70,6 +70,19 @@ public class Main {
     Driver.findElement(By.id(mobile_id)).click();
   }
 
+  public static CourtCase row(Element r) {
+    Elements cells = r.select("td");
+
+    String cause = cells.get(0).text().trim().replace("\n", "");
+    String style = cells.get(1).text().trim().replace("\n", "");
+    String fileDate = cells.get(2).text().trim().replace("\n", "");
+    String court = cells.get(3).text().trim().replace("\n", "");
+    String region = cells.get(4).text().trim().replace("\n", "");
+    String type = cells.get(5).text().trim().replace("\n", "");
+
+    return new CourtCase(cause, style, fileDate, court, region, type);
+  }
+
   public static void main(String[] args) throws IOException {
     WebDriver Driver = initDriver();
     mobile(Driver);
@@ -87,37 +100,18 @@ public class Main {
       Elements rows = doc.select("tr[style]");
       for (int i = 0; i < rows.size(); ++i) {
         Element r = rows.get(i);
-        Elements cells = r.select("td");
 
-        String cause = cells.get(0).text().trim().replace("\n", "");
-        String style = cells.get(1).text().trim().replace("\n", "");
-        String fileDate = cells.get(2).text().trim().replace("\n", "");
-        String court = cells.get(3).text().trim().replace("\n", "");
-        String region = cells.get(4).text().trim().replace("\n", "");
-        String type = cells.get(5).text().trim().replace("\n", "");
-
-        System.out.print(cause);
-        System.out.print(',');
-        System.out.print(style);
-        System.out.print(',');
-        System.out.print(fileDate);
-        System.out.print(',');
-        System.out.print(court);
-        System.out.print(',');
-        System.out.print(region);
-        System.out.print(',');
-        System.out.print(type);
-        System.out.println();
-
-        list.add(new CourtCase(cause, style, fileDate, court, region, type));
+        CourtCase courtCase = row(r);
+        System.out.println(courtCase);
+        list.add(courtCase);
       }
+
+      Driver.findElement(By.id("HyperLink1")).click();
 
       break;
     }
 
-    BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-    reader.readLine();
-
+    new BufferedReader(new InputStreamReader(System.in)).readLine();
     Driver.quit();
   }
 }

@@ -16,4 +16,16 @@ public class CourtCase {
     this.caseRegion = _caseRegion;
     this.typeOfAction = _typeOfAction;
   }
+
+  @Override
+  public String toString() {
+    return "CourtCase{" +
+        "caseCause='" + caseCause + '\'' +
+        ", style='" + style + '\'' +
+        ", fileDate='" + fileDate + '\'' +
+        ", court='" + court + '\'' +
+        ", caseRegion='" + caseRegion + '\'' +
+        ", typeOfAction='" + typeOfAction + '\'' +
+        '}';
+  }
 }
