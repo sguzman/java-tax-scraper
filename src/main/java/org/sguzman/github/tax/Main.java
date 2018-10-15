@@ -91,41 +91,45 @@ public class Main {
     return !str.text().contains(notDone);
   }
 
+  public static ArrayList<CourtCase> fromBarNumber(WebDriver Driver, String barcode) {
+    ArrayList<CourtCase> list = new ArrayList<>();
+    while (true) {
+      WebDriverWait waitForBarNumberInput = new WebDriverWait(Driver, timeoutOutInSeconds);
+      waitForBarNumberInput.until(ExpectedConditions.visibilityOfElementLocated(By.id(barcode_id)));
+      Driver.findElement(By.id(barcode_id)).sendKeys(barcode);
+      if (!list.isEmpty()) {
+        Driver.findElement(By.id(enddate_id)).sendKeys(list.get(list.size() - 1).fileDate);
+      }
+
+      Driver.findElement(By.id("btnSearch")).click();
+
+      WebDriverWait waitResults = new WebDriverWait(Driver, timeoutOutInSeconds * 4);
+      waitResults.until(ExpectedConditions.visibilityOfElementLocated(By.id("tblResults")));
+      Document doc = Jsoup.parse(Driver.getPageSource());
+      Elements rows = doc.select("tr[style]");
+      for (Element r : rows) {
+        CourtCase courtCase = row(r);
+        System.out.println(courtCase);
+        list.add(courtCase);
+      }
+
+      Driver.findElement(By.id("HyperLink1")).click();
+      System.out.println(list.size());
+      if (doneSearching(doc)) {
+        break;
+      }
+    }
+
+    System.out.println(list.size());
+    return list;
+  }
+
   public static void main(String[] args) throws IOException {
     WebDriver Driver = initDriver();
     mobile(Driver);
 
-    ArrayList<CourtCase> list = new ArrayList<>();
-    for (String barcode : barNumbers) {
-      while (true) {
-        WebDriverWait waitForBarNumberInput = new WebDriverWait(Driver, timeoutOutInSeconds);
-        waitForBarNumberInput.until(ExpectedConditions.visibilityOfElementLocated(By.id(barcode_id)));
-        Driver.findElement(By.id(barcode_id)).sendKeys(barcode);
-        if (!list.isEmpty()) {
-          Driver.findElement(By.id(enddate_id)).sendKeys(list.get(list.size() - 1).fileDate);
-        }
-
-        Driver.findElement(By.id("btnSearch")).click();
-
-        WebDriverWait waitResults = new WebDriverWait(Driver, timeoutOutInSeconds * 4);
-        waitResults.until(ExpectedConditions.visibilityOfElementLocated(By.id("tblResults")));
-        Document doc = Jsoup.parse(Driver.getPageSource());
-        Elements rows = doc.select("tr[style]");
-        for (Element r : rows) {
-          CourtCase courtCase = row(r);
-          System.out.println(courtCase);
-          list.add(courtCase);
-        }
-
-        Driver.findElement(By.id("HyperLink1")).click();
-        System.out.println(list.size());
-        if (doneSearching(doc)) {
-          break;
-        }
-      }
-
-      System.out.println(list.size());
-    }
+    ArrayList<CourtCase> list0 = fromBarNumber(Driver, barNumbers[0]);
+    ArrayList<CourtCase> list1 = fromBarNumber(Driver, barNumbers[1]);
 
     new BufferedReader(new InputStreamReader(System.in)).readLine();
     Driver.quit();
