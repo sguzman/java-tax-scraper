@@ -16,7 +16,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 
 public class Main {
   public final static String[] barNumbers = {"24041980", "00792098"};
@@ -48,7 +48,6 @@ public class Main {
 
   private static void mobile(WebDriver Driver) {
     Driver.navigate().to("https://www.hcdistrictclerk.com/eDocs/Secure/Login.aspx?ReturnUrl=%2fCommon%2fDefault.aspx%3fShowFF%3d1");
-    System.out.println(Driver.getTitle());
 
     WebDriverWait waitForUsername = new WebDriverWait(Driver, timeoutOutInSeconds);
     waitForUsername.until(ExpectedConditions.visibilityOfElementLocated(By.id(user_id)));
@@ -92,7 +91,7 @@ public class Main {
     return !str.text().contains(notDone);
   }
 
-  public static LinkedHashSet<CourtCase> fromBarNumber(WebDriver Driver, String barcode) {
+  public static HashSet<CourtCase> fromBarNumber(WebDriver Driver, String barcode) {
     ArrayList<CourtCase> list = new ArrayList<>();
     while (true) {
       WebDriverWait waitForBarNumberInput = new WebDriverWait(Driver, timeoutOutInSeconds);
@@ -121,15 +120,18 @@ public class Main {
       }
     }
 
-    return new LinkedHashSet<>(list);
+    return new HashSet<>(list);
   }
 
   public static void main(String[] args) throws IOException {
     WebDriver Driver = initDriver();
     mobile(Driver);
 
-    LinkedHashSet<CourtCase> list0 = fromBarNumber(Driver, barNumbers[0]);
-    LinkedHashSet<CourtCase> list1 = fromBarNumber(Driver, barNumbers[1]);
+    HashSet<CourtCase> list0 = fromBarNumber(Driver, barNumbers[0]);
+    {
+      HashSet<CourtCase> list1 = fromBarNumber(Driver, barNumbers[1]);
+      list0.addAll(list1);
+    }
 
     new BufferedReader(new InputStreamReader(System.in)).readLine();
     Driver.quit();

@@ -8,6 +8,10 @@ public class CourtCase {
   public String caseRegion;
   public String typeOfAction;
 
+  public static int hash = 0;
+
+  public int thisHash;
+
   public CourtCase(String _caseCause, String _style, String _fileDate, String _court, String _caseRegion, String _typeOfAction) {
     this.caseCause = _caseCause;
     this.style = _style;
@@ -15,6 +19,8 @@ public class CourtCase {
     this.court = _court;
     this.caseRegion = _caseRegion;
     this.typeOfAction = _typeOfAction;
+
+    this.thisHash = ++hash;
   }
 
   @Override
@@ -27,6 +33,11 @@ public class CourtCase {
         ", caseRegion='" + caseRegion + '\'' +
         ", typeOfAction='" + typeOfAction + '\'' +
         '}';
+  }
+
+  @Override
+  public int hashCode() {
+    return this.thisHash;
   }
 
   @Override
