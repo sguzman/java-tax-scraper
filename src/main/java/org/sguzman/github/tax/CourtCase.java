@@ -28,4 +28,20 @@ public class CourtCase {
         ", typeOfAction='" + typeOfAction + '\'' +
         '}';
   }
+
+  @Override
+  public boolean equals(Object that) {
+    if((that == null) || (getClass() != that.getClass())){
+      return false;
+    }
+
+    CourtCase thatt = (CourtCase) that;
+
+    return this.caseCause.equals(thatt.caseCause) &&
+          this.style.equals(thatt.style) &&
+          this.fileDate.equals(thatt.fileDate) &&
+          this.court.equals(thatt.court) &&
+          this.caseRegion.equals(thatt.caseRegion) &&
+          this.typeOfAction.equals(thatt.typeOfAction);
+  }
 }

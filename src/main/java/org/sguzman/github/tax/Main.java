@@ -16,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
 public class Main {
   public final static String[] barNumbers = {"24041980", "00792098"};
@@ -91,7 +92,7 @@ public class Main {
     return !str.text().contains(notDone);
   }
 
-  public static ArrayList<CourtCase> fromBarNumber(WebDriver Driver, String barcode) {
+  public static LinkedHashSet<CourtCase> fromBarNumber(WebDriver Driver, String barcode) {
     ArrayList<CourtCase> list = new ArrayList<>();
     while (true) {
       WebDriverWait waitForBarNumberInput = new WebDriverWait(Driver, timeoutOutInSeconds);
@@ -120,15 +121,15 @@ public class Main {
       }
     }
 
-    return list;
+    return new LinkedHashSet<>(list);
   }
 
   public static void main(String[] args) throws IOException {
     WebDriver Driver = initDriver();
     mobile(Driver);
 
-    ArrayList<CourtCase> list0 = fromBarNumber(Driver, barNumbers[0]);
-    ArrayList<CourtCase> list1 = fromBarNumber(Driver, barNumbers[1]);
+    LinkedHashSet<CourtCase> list0 = fromBarNumber(Driver, barNumbers[0]);
+    LinkedHashSet<CourtCase> list1 = fromBarNumber(Driver, barNumbers[1]);
 
     new BufferedReader(new InputStreamReader(System.in)).readLine();
     Driver.quit();
