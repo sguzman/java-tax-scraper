@@ -35,6 +35,7 @@ public class Main {
   private final static int timeoutOutInSeconds = 10;
 
   private final static String barcode_id = "tabSearch_tabCivil_txtBarNumber";
+  private final static String enddate_id = "tabSearch_tabCivil_txtCivilEndDate";
 
   private static ChromeDriver initDriver() {
     ChromeOptions chromeOptions = new ChromeOptions();
@@ -83,11 +84,11 @@ public class Main {
     return new CourtCase(cause, style, fileDate, court, region, type);
   }
 
-  public static boolean doneSearching(Document doc) {
+  private static boolean doneSearching(Document doc) {
     String notDone = "Please search again using additional criteria to narrow your results";
     Element str = doc.getElementById("lblreccount");
 
-    return str.text().contains(notDone);
+    return !str.text().contains(notDone);
   }
 
   public static void main(String[] args) throws IOException {
@@ -100,15 +101,15 @@ public class Main {
         WebDriverWait waitForBarNumberInput = new WebDriverWait(Driver, timeoutOutInSeconds);
         waitForBarNumberInput.until(ExpectedConditions.visibilityOfElementLocated(By.id(barcode_id)));
         Driver.findElement(By.id(barcode_id)).sendKeys(barcode);
+        if (!list.isEmpty()) {
+          Driver.findElement(By.id(enddate_id)).sendKeys(list.get(list.size() - 1).fileDate);
+        }
+
         Driver.findElement(By.id("btnSearch")).click();
 
         WebDriverWait waitResults = new WebDriverWait(Driver, timeoutOutInSeconds * 4);
         waitResults.until(ExpectedConditions.visibilityOfElementLocated(By.id("tblResults")));
         Document doc = Jsoup.parse(Driver.getPageSource());
-        if (doneSearching(doc)) {
-          break;
-        }
-
         Elements rows = doc.select("tr[style]");
         for (Element r : rows) {
           CourtCase courtCase = row(r);
@@ -117,6 +118,10 @@ public class Main {
         }
 
         Driver.findElement(By.id("HyperLink1")).click();
+        System.out.println(list.size());
+        if (doneSearching(doc)) {
+          break;
+        }
       }
 
       System.out.println(list.size());
