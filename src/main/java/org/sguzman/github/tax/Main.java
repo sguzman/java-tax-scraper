@@ -96,6 +96,9 @@ public class Main {
     while (true) {
       WebDriverWait waitForBarNumberInput = new WebDriverWait(Driver, timeoutOutInSeconds);
       waitForBarNumberInput.until(ExpectedConditions.visibilityOfElementLocated(By.id(barcode_id)));
+      Driver.findElement(By.id("tabSearch_tabCivil_txtCivilStartDate")).sendKeys("1/1/2017");
+
+
       Driver.findElement(By.id(barcode_id)).sendKeys(barcode);
       if (!list.isEmpty()) {
         Driver.findElement(By.id(enddate_id)).sendKeys(list.get(list.size() - 1).fileDate);
