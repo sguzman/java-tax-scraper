@@ -7,18 +7,20 @@ public class CourtCase {
   public String court;
   public String caseRegion;
   public String typeOfAction;
+  public String url;
 
   public static int hash = 0;
 
   public int thisHash;
 
-  public CourtCase(String _caseCause, String _style, String _fileDate, String _court, String _caseRegion, String _typeOfAction) {
+  public CourtCase(String _caseCause, String _style, String _fileDate, String _court, String _caseRegion, String _typeOfAction, String _url) {
     this.caseCause = _caseCause;
     this.style = _style;
     this.fileDate = _fileDate;
     this.court = _court;
     this.caseRegion = _caseRegion;
     this.typeOfAction = _typeOfAction;
+    this.url = _url;
 
     this.thisHash = ++hash;
   }
@@ -32,6 +34,7 @@ public class CourtCase {
         ", court='" + court + '\'' +
         ", caseRegion='" + caseRegion + '\'' +
         ", typeOfAction='" + typeOfAction + '\'' +
+        ", url='" + url + '\'' +
         '}';
   }
 
